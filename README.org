@@ -1,8 +1,10 @@
-This is the chisel intro for the TDT4255 course at NTNU.
-If you use it for your course, please let me know how it went and feel 
-free (or even slightly pressured) to submit pull requests with improvements.
+** TDT4255 Exercise 0: Introduction to Chisel and HDLs
 
-There are several separate modules for you to read through before you're ready
+This is the exercise 0 chisel intro for the TDT4255 course at NTNU. You may also be here if you are taking TDT4295.
+
+The main content of this repository was originally created by [[https://github.com/PeterAaser][Peter Aaser]]. The content has been adapted slightly for the Fall 2020 version of the course.
+
+There are several separate modules for you to read through before you will be ready
 to start writing code.
 However, if you just want to get started right away you can skip the introduction
 to hardware description languages, and jump straight to the [[./introduction.org][Intro to chisel]] which
@@ -13,8 +15,3 @@ In order to get started you should go through the introductory material:
 
 The deliverable for this exercise is constructing a matrix multiplying unit:
 - [[./exercise.org][Matrix multiplier exercise]]
-
-The main course(work) for creating a 5-stage RISCV pipeline can be found here:
-- https://github.com/PeterAaser/TDT4255_EX2
-
-If you're unsure where to start just go straight to [[./introduction.org][Intro to chisel]].
