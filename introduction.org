@@ -126,7 +126,7 @@
 
      A register works similarly to a wire, however its value is only updated when
      the clock ticks.
-     Unlike wires clocks can have circular dependencies like this:
+     Unlike wires, registers can have circular dependencies like this:
      #+begin_src scala
      val regA = RegInit(2.U(4.W))
      val regB = RegInit(1.U(4.W))
