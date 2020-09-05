@@ -96,8 +96,6 @@ class MyIncrementManyTest extends FlatSpec with Matchers {
   }
 }
 
-
-
 class ChiselConditional() extends Module {
   val io = IO(
     new Bundle {
