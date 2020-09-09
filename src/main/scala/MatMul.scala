@@ -1,3 +1,5 @@
+// Chisel
+
 package Ex0
 
 import chisel3._
@@ -23,29 +25,55 @@ class MatMul(val rowDimsA: Int, val colDimsA: Int) extends MultiIOModule {
   )
 
 
-  /**
-    * Your code here
-    */
   val matrixA     = Module(new Matrix(rowDimsA, colDimsA)).io
   val matrixB     = Module(new Matrix(rowDimsA, colDimsA)).io
   val dotProdCalc = Module(new DotProd(colDimsA)).io
 
-  matrixA.dataIn      := 0.U
-  matrixA.rowIdx      := 0.U
-  matrixA.colIdx      := 0.U
-  matrixA.writeEnable := false.B
+  val state = RegInit(0.U(32.W))
+  val statemachineInput: Bool = state === 0.U
+  val statemachineCalc: Bool = state === 1.U
 
-  matrixB.rowIdx      := 0.U
-  matrixB.colIdx      := 0.U
-  matrixB.dataIn      := 0.U
-  matrixB.writeEnable := false.B
+  val (cntCol, cntColW) = Counter(true.B, colDimsA)
 
-  dotProdCalc.dataInA := 0.U
-  dotProdCalc.dataInB := 0.U
+  val cntRowBact = cntColW
 
-  io.dataOut := 0.U
-  io.outputValid := false.B
+  val (cntRowB, cntRowBWrap) = Counter(cntRowBact, rowDimsA)
+  val cntRowAact = cntRowBWrap || (cntColW && statemachineInput)
+  val (cntRowA, cntRowAWrap) = Counter(cntRowAact, rowDimsA)
 
 
-  debug.myDebugSignal := false.B
+
+
+  // State machine
+  when (statemachineInput) {
+    when (cntRowAWrap) {
+      state := 1.U
+    }.otherwise {
+      state := state
+    }
+  }.otherwise {
+    when (cntRowAWrap) {
+      state := 0.U
+    }.otherwise {
+      state := state
+    }
+  }
+
+  // Mapping
+  matrixA.writeEnable := statemachineInput
+  matrixB.writeEnable := statemachineInput
+
+  matrixA.colIdx := cntCol
+  matrixA.rowIdx := cntRowA
+  matrixA.dataIn := io.dataInA
+
+  matrixB.colIdx := cntCol
+  matrixB.rowIdx := cntRowB
+  matrixB.dataIn := io.dataInB
+
+  dotProdCalc.dataInA := matrixA.dataOut
+  dotProdCalc.dataInB := matrixB.dataOut
+
+  io.dataOut := dotProdCalc.dataOut
+  io.outputValid := dotProdCalc.outputValid && statemachineCalc
 }
