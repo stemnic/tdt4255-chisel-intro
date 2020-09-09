@@ -18,7 +18,7 @@ class MatrixSpec extends FlatSpec with Matchers {
 
   it should "Update its contents with a square shape" in {
     wrapTester(
-      chisel3.iotesters.Driver(() => new Matrix(rowDims,rowDims)) { c =>
+      chisel3.iotesters.Driver.execute(Array("--generate-vcd-output", "on", "--backend-name", "treadle"), () => new Matrix(rowDims,rowDims)) { c =>
         new UpdatesData(c)
       } should be(true)
     )
@@ -27,7 +27,7 @@ class MatrixSpec extends FlatSpec with Matchers {
 
   it should "Update its contents with a rectangular shape" in {
     wrapTester(
-      chisel3.iotesters.Driver(() => new Matrix(rowDims,colDims)) { c =>
+      chisel3.iotesters.Driver.execute(Array("--generate-vcd-output", "on", "--backend-name", "treadle"), () => new Matrix(rowDims,colDims)) { c =>
         new UpdatesData(c)
       } should be(true)
     )
@@ -36,7 +36,7 @@ class MatrixSpec extends FlatSpec with Matchers {
 
   it should "Retain its contents when writeEnable is low" in {
     wrapTester(
-      chisel3.iotesters.Driver(() => new Matrix(rowDims, colDims)) { c =>
+      chisel3.iotesters.Driver.execute(Array("--generate-vcd-output", "on", "--backend-name", "treadle"), () => new Matrix(rowDims, colDims)) { c =>
         new RetainsData(c)
       } should be(true)
     )

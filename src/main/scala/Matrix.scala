@@ -26,24 +26,36 @@ class Matrix(val rowsDim: Int, val colsDim: Int) extends Module {
     *
     * In your finished work these can be deleted.
     */
+  /*
   io.dataOut := 0.U
   for(ii <- 0 until rowsDim){
     rows(ii).dataIn      := 0.U
     rows(ii).writeEnable := false.B
     rows(ii).idx         := 0.U
   }
-
+  */
 
   /**
     * Your code here
     */
   // Fill a Vec with your Vector from the previous exercise.
   // The naming conflict is a little unfortunate.
-  val rows = Vec.fill(rowsDim)(Module(new Vector(colsDim)).io)
+  val rows = VecInit(Seq.fill(rowsDim)(Module(new Vector(colsDim)).io))
 
   // When writeEnable is high, use rowIdx to select which row you want to operate on.
-  when(io.writeEnable){
-    val huh = rows(io.rowIdx)
+  io.dataOut := 0.U
+  for(ii <- 0 until rowsDim){
+    val huh2 = rows(ii)
+    huh2.dataIn := io.dataIn
+    when (ii.U === io.rowIdx) {
+        rows(ii).writeEnable := io.writeEnable
+      }.otherwise{
+        rows(ii).writeEnable := false.B
+      }
+      huh2.idx := io.colIdx
+
   }
+
+  io.dataOut := rows(io.rowIdx).dataOut
 
 }
